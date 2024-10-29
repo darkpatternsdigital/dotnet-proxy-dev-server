@@ -1,0 +1,26 @@
+name: 'Package Cache'
+description: 'Caches packages for this repository'
+inputs:
+  npm-registry-target:
+    description: 'Either "npmjs", "github", or a URL'
+    required: false
+    default: 'npmjs'
+outputs: {}
+runs:
+  using: 'composite'
+  steps:
+    # .NET install and cache
+    - uses: actions/setup-dotnet@v4
+      with:
+        # The main version this project uses
+        dotnet-version: '8.0.x'
+        cache: true
+        cache-dependency-path: '**/packages.lock.json'
+
+    # PNPM install and cache
+    - name: Setup PNPM
+      uses: pnpm/action-setup@v4
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        registry-url: ${{ (inputs.npm-registry-target == 'npmjs' && 'https://registry.npmjs.org/') || (inputs.npm-registry-target == 'github' && 'https://npm.pkg.github.com/') || inputs.npm-registry-target }}

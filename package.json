@@ -1,0 +1,38 @@
+{
+	"name": "nodedevserver",
+	"version": "1.0.0",
+	"description": "",
+	"private": "true",
+	"type": "module",
+	"scripts": {
+		"test": "dotnet test",
+		"lint": "pnpm run typecheck && pnpm run eslint:check && pnpm run prettier:check",
+		"lint:fix": "pnpm run typecheck && pnpm run eslint:fix && pnpm run prettier:fix",
+		"eslint:check": "eslint .",
+		"eslint:fix": "eslint . --fix",
+		"prettier:check": "prettier --list-different .",
+		"prettier:fix": "prettier --write .",
+		"typecheck": "tsc -b"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "MIT",
+	"devDependencies": {
+		"@darkpatternsdigital/eslint-config": "*",
+		"@darkpatternsdigital/prettier-config": "*",
+		"@darkpatternsdigital/tsconfigs": "*",
+		"@eslint/compat": "^1.1.1",
+		"@types/node": "^22.5.0",
+		"eslint": "9.9.0",
+		"prettier": "^3.3.3",
+		"typescript": "^5.5.4"
+	},
+	"packageManager": "pnpm@9.10.0",
+	"pnpm": {
+		"peerDependencyRules": {
+			"allowedVersions": {
+				"eslint-plugin-import@2.29.1>eslint": ">=9"
+			}
+		}
+	}
+}

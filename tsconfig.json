@@ -1,0 +1,4 @@
+{
+	"extends": "@darkpatternsdigital/tsconfigs/configs/tsconfig.monorepo.json",
+	"references": []
+}
