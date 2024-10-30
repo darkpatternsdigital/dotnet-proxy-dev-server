@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <RootNamespace>DarkPatterns.ProxyDevelopmentServer.Demo</RootNamespace>
+    <UiDir>$(ProjectDir)ui\</UiDir>
+    <NpmInstallRecordPath>$(UiDir)node_modules\_$(Configuration)._</NpmInstallRecordPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProxyDevelopmentServer\ProxyDevelopmentServer.csproj" />
+  </ItemGroup>
+
+  <Target Name="NpmInstall" BeforeTargets="BeforeBuild" Inputs="$(UiDir)package.json;$(UiDir)package-lock.json" Outputs="$(NpmInstallRecordPath)">
+    <Exec WorkingDirectory="$(UiDir)" Condition=" $(Configuration) != 'Release' " Command="npm install" />
+    <Exec WorkingDirectory="$(UiDir)" Condition=" $(Configuration) == 'Release' " Command="npm ci" />
+    <!-- On either build, mark that it succeeded so it skips and goes fast next time... if there's no changes to package*.json -->
+    <Touch AlwaysCreate="true" ForceTouch="true" Files="$(NpmInstallRecordPath)" />
+  </Target>
+
+</Project>

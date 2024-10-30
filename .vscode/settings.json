@@ -40,5 +40,5 @@
 		"editor.formatOnSave": true,
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
-	"dotnet.defaultSolution": "NodeDevServer.sln"
+	"dotnet.defaultSolution": "DarkPatterns.ProxyDevelopmentServer.sln"
 }

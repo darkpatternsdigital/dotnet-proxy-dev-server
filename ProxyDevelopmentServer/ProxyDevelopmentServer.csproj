@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+
+		<!--
+			CA1848 - LoggerMessage delegates should be used, but this should be a development-time-only library
+		 -->
+		<NoWarn>$(NoWarn),CA1848</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="\" Visible="false" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="8.0.0" />
+	</ItemGroup>
+</Project>

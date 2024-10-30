@@ -4,9 +4,10 @@
 		<UseArtifactsOutput>true</UseArtifactsOutput>
 		<SolutionRoot>$(MSBuildThisFileDirectory)</SolutionRoot>
 		<RepositoryEngineeringDir>$(SolutionRoot)eng/</RepositoryEngineeringDir>
-		<RootNamespace>DarkPatterns</RootNamespace>
+		<RootNamespace>DarkPatterns.ProxyDevelopmentServer</RootNamespace>
 
 		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
