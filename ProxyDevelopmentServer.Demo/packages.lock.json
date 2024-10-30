@@ -50,13 +50,13 @@
         "resolved": "8.0.0",
         "contentHash": "bXJEZrW9ny8vjMF1JV253WeLhpEVzFo1lyaZu1vQ4ZxWUlVvknZ/+ftFgVheLubb4eZPSwwxBeqS1JkCOjxd8g=="
       },
-      "proxydevelopmentserver": {
+      "DarkPatterns.ProxyDevelopmentServer": {
         "type": "Project",
         "dependencies": {
           "Microsoft.AspNetCore.SpaServices.Extensions": "[8.0.0, )"
         }
       },
-      "proxydevelopmentserver.demo.react": {
+      "DarkPatterns.ProxyDevelopmentServer.Demo.React": {
         "type": "Project"
       }
     }

@@ -5,6 +5,7 @@
 		<SolutionRoot>$(MSBuildThisFileDirectory)</SolutionRoot>
 		<RepositoryEngineeringDir>$(SolutionRoot)eng/</RepositoryEngineeringDir>
 		<RootNamespace>DarkPatterns.ProxyDevelopmentServer</RootNamespace>
+		<AssemblyName>DarkPatterns.$(MSBuildProjectName)</AssemblyName>
 
 		<TargetFramework>net8.0</TargetFramework>
 		<LangVersion>12</LangVersion>

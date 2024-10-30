@@ -471,20 +471,20 @@
           "xunit.extensibility.core": "[2.6.6]"
         }
       },
-      "proxydevelopmentserver": {
+      "DarkPatterns.ProxyDevelopmentServer": {
         "type": "Project",
         "dependencies": {
           "Microsoft.AspNetCore.SpaServices.Extensions": "[8.0.0, )"
         }
       },
-      "proxydevelopmentserver.demo": {
+      "DarkPatterns.ProxyDevelopmentServer.Demo": {
         "type": "Project",
         "dependencies": {
-          "ProxyDevelopmentServer": "[0.1.0-local, )",
-          "ProxyDevelopmentServer.Demo.React": "[1.0.0-local, )"
+          "DarkPatterns.ProxyDevelopmentServer": "[0.1.0-local, )",
+          "DarkPatterns.ProxyDevelopmentServer.Demo.React": "[1.0.0-local, )"
         }
       },
-      "proxydevelopmentserver.demo.react": {
+      "DarkPatterns.ProxyDevelopmentServer.Demo.React": {
         "type": "Project"
       }
     }
