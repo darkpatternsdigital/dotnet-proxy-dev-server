@@ -28,9 +28,13 @@ jobs:
 
       ###########
       # TEST
+      - name: Build
+        shell: pwsh
+        run: |
+          Get-Command pnpm | ConvertTo-Json
       - name: Test
         run: |
-          dotnet test --verbosity normal --configuration Release --collect:"XPlat Code Coverage"
+          dotnet test --verbosity normal --configuration Release --no-build --collect:"XPlat Code Coverage"
       - name: 'Upload Code Coverage'
         uses: actions/upload-artifact@v3
         with:
