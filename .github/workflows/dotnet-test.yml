@@ -24,27 +24,13 @@ jobs:
         run: dotnet restore --locked-mode
       - name: Build
         run: |
-          if [[ $VERSION_SUFFIX ]]; then
-            VERSION_SUFFIX_PARAM="--version-suffix sha.$VERSION_SUFFIX"
-          else
-            VERSION_SUFFIX_PARAM=''
-          fi
-          dotnet build --no-restore --configuration Release ${VERSION_SUFFIX_PARAM}
-        env:
-          VERSION_SUFFIX: ${{ github.ref != 'refs/heads/main' && github.sha || '' }}
+          dotnet build --no-restore --configuration Release
 
       ###########
       # TEST
       - name: Test
         run: |
-          if [[ $VERSION_SUFFIX ]]; then
-            VERSION_SUFFIX_PARAM="-p:VersionSuffix=sha.$VERSION_SUFFIX"
-          else
-            VERSION_SUFFIX_PARAM=''
-          fi
-          dotnet test --verbosity normal ${VERSION_SUFFIX_PARAM} --configuration Release --collect:"XPlat Code Coverage"
-        env:
-          VERSION_SUFFIX: ${{ github.ref != 'refs/heads/main' && github.sha || '' }}
+          dotnet test --verbosity normal --configuration Release --collect:"XPlat Code Coverage"
       - name: 'Upload Code Coverage'
         uses: actions/upload-artifact@v3
         with:
