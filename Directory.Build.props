@@ -7,9 +7,12 @@
 		<RootNamespace>DarkPatterns.ProxyDevelopmentServer</RootNamespace>
 
 		<TargetFramework>net8.0</TargetFramework>
+		<LangVersion>12</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
+
+	<Import Project="$(RepositoryEngineeringDir)package-defaults/package-defaults.props" />
 
 	<ItemGroup>
 		<PackageReference Include="DarkPatterns.Build.Structure" Version="0.1.1" PrivateAssets="All" />

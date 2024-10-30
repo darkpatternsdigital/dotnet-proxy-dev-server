@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ProxyDevelopmentServer\ProxyDevelopmentServer.csproj" />
+    <ProjectReference Include="..\ProxyDevelopmentServer.Demo.React\ProxyDevelopmentServer.Demo.React.csproj" />
   </ItemGroup>
 
 </Project>
