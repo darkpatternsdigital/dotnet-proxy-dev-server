@@ -1,0 +1,13 @@
+{
+	"extends": "@darkpatternsdigital/tsconfigs/configs/tsconfig.node.json",
+	"compilerOptions": {
+		"rootDir": ".",
+		"outDir": "../artifacts/obj/ui/ts-output/node"
+	},
+	"exclude": ["./src"],
+	"references": [
+		{
+			"path": "./src/tsconfig.json"
+		}
+	]
+}

@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net8.0": {
+      "DarkPatterns.Build.Autoformat": {
+        "type": "Direct",
+        "requested": "[0.2.0, )",
+        "resolved": "0.2.0",
+        "contentHash": "7PoernGGegieVMEjS3fgWWYKnMUyEB/ybst1/WshRbQYd5NA9JCGxMAOOowR5X5PgXPnNa+J44C0oVjZjTFaAQ=="
+      },
+      "DarkPatterns.Build.Structure": {
+        "type": "Direct",
+        "requested": "[0.1.1, )",
+        "resolved": "0.1.1",
+        "contentHash": "EDLwiRYZMbK0ehlblP64WJYi44r4TyvkzilYopwu7ak1elImui9TL5qN7kj/x9u7tgLk+p1/dDJdazWUE9fRnA=="
+      },
+      "JsonPeek": {
+        "type": "Direct",
+        "requested": "[1.2.0, )",
+        "resolved": "1.2.0",
+        "contentHash": "Gv/px3/ZIew2598+VHJ2WV5ptkuO5j7vMhJwcL2cy2z2zsvQ5QsIj4PnEbBBCqZKsvhq/W2aUo9ulZsav7fyVw=="
+      }
+    }
+  }
+}

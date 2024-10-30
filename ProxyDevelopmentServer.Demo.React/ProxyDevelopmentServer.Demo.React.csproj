@@ -1,0 +1,12 @@
+<Project Sdk="DarkPatterns.Build.Pnpm/0.2.1">
+	<PropertyGroup>
+		<ViteOutputDirectory>dist/</ViteOutputDirectory>
+	</PropertyGroup>
+	<ItemGroup>
+		<Compile Remove="src/**/stories/**/*;src/**/*.stories.*" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(Configuration)' == 'Release' ">
+		<CompileOutputs Include="$(ViteOutputDirectory)index.html" />
+	</ItemGroup>
+</Project>

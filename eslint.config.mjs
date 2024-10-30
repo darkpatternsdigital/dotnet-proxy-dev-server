@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'node:url';
 import { includeIgnoreFile } from '@eslint/compat';
-import dpeslint from '@darkpatternsdigital/eslint-config';
+import dpeslint from '@darkpatternsdigital/eslint-config/tsx';
 import { tseslint } from '@darkpatternsdigital/eslint-config/types';
 
 export default tseslint.config(

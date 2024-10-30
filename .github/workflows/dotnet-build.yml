@@ -1,0 +1,47 @@
+name: All packages build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches:
+      - '**/*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/workflows/parts/cache/
+
+      ###########
+      # BUILD
+      - name: Restore dependencies
+        run: dotnet restore --locked-mode
+      - name: Build
+        run: |
+          if [[ $VERSION_SUFFIX ]]; then
+            VERSION_SUFFIX_PARAM="--version-suffix sha.$VERSION_SUFFIX"
+          else
+            VERSION_SUFFIX_PARAM=''
+          fi
+          dotnet build --no-restore --configuration Release ${VERSION_SUFFIX_PARAM}
+        env:
+          VERSION_SUFFIX: ${{ github.ref != 'refs/heads/main' && github.sha || '' }}
+
+      ###########
+      # PUBLISH
+      - name: Publish NuGet packages to GitHub registry if new version number
+        if: ${{ github.ref != 'refs/heads/main' }}
+        run: dotnet nuget push ./artifacts/package/release/*.nupkg -k ${GITHUB_TOKEN} -s https://nuget.pkg.github.com/$GITHUB_REPOSITORY_OWNER/index.json --skip-duplicate --no-symbols
+        continue-on-error: true # Dependabot and other outside contributors can't push to our GitHub packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish NuGet packages to NuGet registry if new version number
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: dotnet nuget push ./artifacts/package/release/*.nupkg -k ${NUGET_API_KEY} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
