@@ -24,7 +24,7 @@ app.UseSpa(spa => {
     if (env.IsDevelopment())
     {
         spa.Options.SourcePath = "./path-to-react-source";
-        spa.UseDevelopmentServer(
+        spa.UseProxyDevelopmentServer(
             // The bin path to run to launch the server from the SourcePath.
             // This is typically "node_modules/.bin/vite", but if you wrap Vite
             // a different path may be necessary

@@ -8,8 +8,7 @@ using Microsoft.Extensions.Logging;
 namespace DarkPatterns.ProxyDevelopmentServer;
 
 /// <summary>
-/// Executes the <c>script</c> entries defined in a <c>package.json</c> file,
-/// capturing any output written to stdio.
+/// Executes an executable in the background, capturing any output written to stdio.
 /// </summary>
 internal sealed class ProxyScriptRunner : IDisposable
 {
@@ -21,40 +20,29 @@ internal sealed class ProxyScriptRunner : IDisposable
 
 	private static readonly Regex AnsiColorRegex = new Regex("\x001b\\[[0-9;]*m", RegexOptions.None, TimeSpan.FromSeconds(1));
 
-	public ProxyScriptRunner(string workingDirectory, string command, string arguments, IDictionary<string, string>? envVars, DiagnosticSource diagnosticSource, CancellationToken applicationStoppingToken)
+	public ProxyScriptRunner(string workingDirectory, ProxyDevelopmentServerOptions options, IDictionary<string, string>? envVars, DiagnosticSource diagnosticSource, CancellationToken applicationStoppingToken)
 	{
 		if (string.IsNullOrEmpty(workingDirectory))
 		{
 			throw new ArgumentException("Cannot be null or empty.", nameof(workingDirectory));
 		}
 
-		if (string.IsNullOrEmpty(arguments))
+		if (string.IsNullOrEmpty(options.Parameters))
 		{
-			throw new ArgumentException("Cannot be null or empty.", nameof(arguments));
+			throw new ArgumentException("Parameters in options cannot be null or empty.", nameof(options));
 		}
 
-		if (string.IsNullOrEmpty(command))
+		if (string.IsNullOrEmpty(options.BaseCommand))
 		{
-			throw new ArgumentException("Cannot be null or empty.", nameof(command));
+			throw new ArgumentException("BaseCommand in options cannot be null or empty.", nameof(options));
 		}
 
 		var fullWorkingDirectory = Path.GetFullPath(workingDirectory, Directory.GetCurrentDirectory());
-		var fullPathToCommand = Path.GetFullPath(command, fullWorkingDirectory);
-		var exeToRun = fullPathToCommand;
-		var completeArguments = arguments;
-		if (OperatingSystem.IsWindows())
-		{
-			// On Windows, the node executable is a .cmd file, so it can't be executed
-			// directly (except with UseShellExecute=true, but that's no good, because
-			// it prevents capturing stdio). So we need to invoke it via "cmd /c".
-			exeToRun = "cmd";
-			// Cmd also does not auto-adjust forward-slashes to Window's backslashes.
-			completeArguments = $"/c \"{fullPathToCommand.Replace('/', '\\')}\" {completeArguments}";
-		}
+		var (command, arguments) = GetCommandAndArgs(options, fullWorkingDirectory);
 
-		var processStartInfo = new ProcessStartInfo(exeToRun)
+		var processStartInfo = new ProcessStartInfo(command)
 		{
-			Arguments = completeArguments,
+			Arguments = arguments,
 			UseShellExecute = false,
 			RedirectStandardInput = true,
 			RedirectStandardOutput = true,
@@ -70,7 +58,7 @@ internal sealed class ProxyScriptRunner : IDisposable
 			}
 		}
 
-		_process = LaunchProxyProcess(processStartInfo, command);
+		_process = LaunchProxyProcess(processStartInfo, options.BaseCommand);
 		StdOut = new EventedStreamReader(_process.StandardOutput);
 		StdErr = new EventedStreamReader(_process.StandardError);
 
@@ -94,6 +82,30 @@ internal sealed class ProxyScriptRunner : IDisposable
 			=> diagnosticSource.Write(name, value);
 	}
 
+	private static (string command, string completeArguments) GetCommandAndArgs(ProxyDevelopmentServerOptions options, string fullWorkingDirectory)
+	{
+		if (options.IsScriptFile)
+		{
+			var fullPathToCommand = Path.GetFullPath(options.BaseCommand, fullWorkingDirectory);
+			if (OperatingSystem.IsWindows())
+			{
+				// On Windows, the node executable is a .cmd file, so it can't be executed
+				// directly (except with UseShellExecute=true, but that's no good, because
+				// it prevents capturing stdio). So we need to invoke it via "cmd /c".
+				// Cmd also does not auto-adjust forward-slashes to Window's backslashes.
+				return ("cmd", $"/c \"{fullPathToCommand.Replace('/', '\\')}\" {options.Parameters}");
+			}
+			else
+			{
+				return (fullPathToCommand, options.Parameters);
+			}
+		}
+		else
+		{
+			return (options.BaseCommand, options.Parameters);
+		}
+	}
+
 	public void AttachToLogger(ILogger logger)
 	{
 		// When the node task emits complete lines, pass them through to the real logger
@@ -103,7 +115,7 @@ internal sealed class ProxyScriptRunner : IDisposable
 			{
 				// Node tasks commonly emit ANSI colors, but it wouldn't make sense to forward
 				// those to loggers (because a logger isn't necessarily any kind of terminal)
-				logger.LogInformation("node: {StdOut}", StripAnsiColors(line));
+				logger.LogInformation("proxy: {StdOut}", StripAnsiColors(line));
 			}
 		};
 
@@ -111,7 +123,7 @@ internal sealed class ProxyScriptRunner : IDisposable
 		{
 			if (!string.IsNullOrWhiteSpace(line))
 			{
-				logger.LogError("node: {StdError}", StripAnsiColors(line));
+				logger.LogError("proxy: {StdError}", StripAnsiColors(line));
 			}
 		};
 

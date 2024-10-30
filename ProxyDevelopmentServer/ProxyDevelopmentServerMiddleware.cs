@@ -12,14 +12,10 @@ namespace DarkPatterns.ProxyDevelopmentServer;
 
 internal static class ProxyDevelopmentServerMiddleware
 {
-	private static readonly TimeSpan RegexMatchTimeout = TimeSpan.FromSeconds(5); // This is a development-time only feature, so a very long timeout is fine
-
 	public static void Attach(
 		ISpaBuilder spaBuilder,
-		string baseCommand,
-		string parameters)
+		ProxyDevelopmentServerOptions options)
 	{
-		var pkgManagerCommand = baseCommand;
 		var sourcePath = spaBuilder.Options.SourcePath;
 		var devServerPort = spaBuilder.Options.DevServerPort;
 		if (string.IsNullOrEmpty(sourcePath))
@@ -27,9 +23,9 @@ internal static class ProxyDevelopmentServerMiddleware
 			throw new ArgumentException("Property 'SourcePath' cannot be null or empty", nameof(spaBuilder));
 		}
 
-		if (string.IsNullOrEmpty(parameters))
+		if (string.IsNullOrEmpty(options.Parameters))
 		{
-			throw new ArgumentException("Cannot be null or empty", nameof(parameters));
+			throw new ArgumentException("Options parameters cannot be null or empty", nameof(options));
 		}
 
 		// Start Process and attach to middleware pipeline
@@ -37,7 +33,7 @@ internal static class ProxyDevelopmentServerMiddleware
 		var applicationStoppingToken = appBuilder.ApplicationServices.GetRequiredService<IHostApplicationLifetime>().ApplicationStopping;
 		var logger = LoggerFinder.GetOrCreateLogger(appBuilder, typeof(ProxyDevelopmentServerMiddleware).FullName!);
 		var diagnosticSource = appBuilder.ApplicationServices.GetRequiredService<DiagnosticSource>();
-		var portTask = StartCreateProxyAppServerAsync(sourcePath, parameters, pkgManagerCommand, devServerPort, logger, diagnosticSource, applicationStoppingToken);
+		var portTask = StartCreateProxyAppServerAsync(sourcePath, options, devServerPort, logger, diagnosticSource, applicationStoppingToken);
 
 		SpaProxyingExtensions.UseProxyToSpaDevelopmentServer(spaBuilder, async () =>
 		{
@@ -58,7 +54,7 @@ internal static class ProxyDevelopmentServerMiddleware
 	}
 
 	private static async Task<int> StartCreateProxyAppServerAsync(
-		string sourcePath, string originalParameters, string command, int portNumber, ILogger logger, DiagnosticSource diagnosticSource, CancellationToken applicationStoppingToken)
+		string sourcePath, ProxyDevelopmentServerOptions options, int portNumber, ILogger logger, DiagnosticSource diagnosticSource, CancellationToken applicationStoppingToken)
 	{
 		if (portNumber == default(int))
 		{
@@ -69,12 +65,16 @@ internal static class ProxyDevelopmentServerMiddleware
 			logger.LogInformation("Starting Proxy server on port {Port}...", portNumber);
 		}
 
-		var parameters = originalParameters.Replace("{port}", portNumber.ToString(CultureInfo.InvariantCulture), StringComparison.InvariantCulture);
+		var parameters = options.Parameters.Replace("{port}", portNumber.ToString(CultureInfo.InvariantCulture), StringComparison.InvariantCulture);
+		var newOptions = options with
+		{
+			Parameters = parameters,
+		};
 
 		var envVars = new Dictionary<string, string>();
 #pragma warning disable CA2000 // Dispose objects before losing scope - this script needs to continue running after this function finishes
 		var scriptRunner = new ProxyScriptRunner(
-			sourcePath, command, parameters, envVars, diagnosticSource, applicationStoppingToken);
+			sourcePath, newOptions, envVars, diagnosticSource, applicationStoppingToken);
 #pragma warning restore CA2000 // Dispose objects before losing scope
 		scriptRunner.AttachToLogger(logger);
 
@@ -87,12 +87,12 @@ internal static class ProxyDevelopmentServerMiddleware
 				// no compiler warnings. So instead of waiting for that, consider it ready as soon
 				// as it starts listening for requests.
 				await scriptRunner.StdOut.WaitForMatch(
-					new Regex("ready in", RegexOptions.None, RegexMatchTimeout)).ConfigureAwait(true);
+					new Regex(options.ReadyText, RegexOptions.None, options.Timeout)).ConfigureAwait(true);
 			}
 			catch (EndOfStreamException ex)
 			{
 				throw new InvalidOperationException(
-					$"The command '{command} {parameters}' exited without indicating that the " +
+					$"The command '{options.BaseCommand} {parameters}' exited without indicating that the " +
 					"Proxy server was listening for requests. The error output was: " +
 					$"{stdErrReader.ReadAsString()}", ex);
 			}

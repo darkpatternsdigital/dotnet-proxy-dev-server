@@ -1,0 +1,10 @@
+{
+	"extends": "@darkpatternsdigital/tsconfigs/configs/tsconfig.react.json",
+	"compilerOptions": {
+		"rootDir": ".",
+		"outDir": "../../artifacts/obj/ui/ts-output/src",
+		"tsBuildInfoFile": "../.src.tsbuildinfo",
+		"types": ["vite/client"]
+	},
+	"references": []
+}

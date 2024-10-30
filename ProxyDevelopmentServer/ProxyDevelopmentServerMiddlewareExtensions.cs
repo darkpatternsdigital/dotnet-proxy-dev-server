@@ -19,13 +19,10 @@ public static class ProxyDevelopmentServerMiddlewareExtensions
 	/// sure not to enable the Proxy server.
 	/// </summary>
 	/// <param name="spaBuilder">The <see cref="ISpaBuilder"/>.</param>
-	/// <param name="baseCommand">The name of the executable to launch.</param>
-	/// <param name="parameters">The parameters to pass to the process. Will replace
-	/// `{port}` with the port number.</param>
+	/// <param name="options">The cnofiguration for the proxy development server</param>
 	public static void UseProxyDevelopmentServer(
 		this ISpaBuilder spaBuilder,
-		string baseCommand,
-		string parameters)
+		ProxyDevelopmentServerOptions options)
 	{
 		ArgumentNullException.ThrowIfNull(spaBuilder);
 
@@ -36,6 +33,6 @@ public static class ProxyDevelopmentServerMiddlewareExtensions
 			throw new InvalidOperationException($"To use {nameof(UseProxyDevelopmentServer)}, you must supply a non-empty value for the {nameof(SpaOptions.SourcePath)} property of {nameof(SpaOptions)} when calling {nameof(SpaApplicationBuilderExtensions.UseSpa)}.");
 		}
 
-		ProxyDevelopmentServerMiddleware.Attach(spaBuilder, baseCommand, parameters);
+		ProxyDevelopmentServerMiddleware.Attach(spaBuilder, options);
 	}
 }
