@@ -6,6 +6,10 @@
 		<IsPackable>true</IsPackable>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 
+		<title>Proxy development server for arbitrary SPA front-ends</title>
+		<PackageSummary>Adds a development-experience improvement for SPA applications.</PackageSummary>
+		<description>Adds a development-experience improvement for SPA applications, which will proxy hot-reload, etc. during development</description>
+
 		<!--
 			CA1848 - LoggerMessage delegates should be used, but this should be a development-time-only library
 		 -->
