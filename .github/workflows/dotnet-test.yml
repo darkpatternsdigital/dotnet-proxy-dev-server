@@ -28,8 +28,7 @@ jobs:
 
       ###########
       # TEST
-      - name: Build
-        shell: pwsh
+      - shell: pwsh
         run: |
           Get-Command pnpm | ConvertTo-Json
       - name: Test
