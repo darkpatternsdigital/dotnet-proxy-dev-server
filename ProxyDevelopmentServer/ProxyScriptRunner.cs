@@ -84,21 +84,14 @@ internal sealed class ProxyScriptRunner : IDisposable
 
 	private static (string command, string completeArguments) GetCommandAndArgs(ProxyDevelopmentServerOptions options, string fullWorkingDirectory)
 	{
-		if (options.IsScriptFile)
+		if (OperatingSystem.IsWindows())
 		{
-			var fullPathToCommand = Path.GetFullPath(options.BaseCommand, fullWorkingDirectory);
-			if (OperatingSystem.IsWindows())
-			{
-				return options.ToWindowsCommand(options, fullWorkingDirectory);
-			}
-			else
-			{
-				return (fullPathToCommand, options.Parameters);
-			}
+			return options.ToWindowsCommand(options, fullWorkingDirectory);
 		}
 		else
 		{
-			return (options.BaseCommand, options.Parameters);
+			var fullPathToCommand = Path.GetFullPath(options.BaseCommand, fullWorkingDirectory);
+			return (options.IsScriptFile ? fullPathToCommand : options.BaseCommand, options.Parameters);
 		}
 	}
 

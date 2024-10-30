@@ -49,12 +49,15 @@ public record ProxyDevelopmentServerOptions
 
 	public static (string command, string completeArguments) DefaultToWindowsCommand(ProxyDevelopmentServerOptions options, string fullWorkingDirectory)
 	{
+		if (!options.IsScriptFile)
+			return (options.BaseCommand, options.Parameters);
+
 		var fullPathToCommand = Path.GetFullPath(options.BaseCommand, fullWorkingDirectory);
 
-		// On Windows, the node executable is a .cmd file, so it can't be executed
-		// directly (except with UseShellExecute=true, but that's no good, because
-		// it prevents capturing stdio). So we need to invoke it via "cmd /c".
-		// Cmd also does not auto-adjust forward-slashes to Window's backslashes.
+		// On Windows, script files can't be executed directly (except with
+		// UseShellExecute=true, but that's no good, because it prevents
+		// capturing stdio). So we need to invoke it via "cmd /c". Cmd also does
+		// not auto-adjust forward-slashes to Window's backslashes.
 		return ("cmd", $"/c \"{fullPathToCommand.Replace('/', '\\')}\" {options.Parameters}");
 	}
 }
