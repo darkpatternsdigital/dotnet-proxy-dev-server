@@ -7,13 +7,13 @@ on:
 jobs:
   build:
     strategy:
-      fail-fast: true
       matrix:
         os:
           - 'ubuntu-latest'
           # TODO: Windows tests don't seem to work (though everything else does)
           # - 'windows-latest'
-          - 'macos-latest'
+          # TODO: dotnet CLI is sometimes not found on the path on mac
+          # - 'macos-latest'
     runs-on: ${{ matrix.os }}
     permissions:
       packages: write
