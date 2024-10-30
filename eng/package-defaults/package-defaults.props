@@ -11,6 +11,7 @@
 		<RepositoryBranch>main</RepositoryBranch>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<PackageReadmeFile Condition="exists('$(ProjectDir)README.md')">README.md</PackageReadmeFile>
+		<PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
 		<PackageIcon>dpd-logo.png</PackageIcon>
 		<Copyright>2024 Matt DeKrey and Dark Patterns Digital, LCA</Copyright>
 	</PropertyGroup>

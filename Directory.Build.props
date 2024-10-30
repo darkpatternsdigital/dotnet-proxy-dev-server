@@ -10,6 +10,8 @@
 		<LangVersion>12</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+
+		<VersionSuffix Condition=" '$(Configuration)' == 'Debug' ">local</VersionSuffix>
 	</PropertyGroup>
 
 	<Import Project="$(RepositoryEngineeringDir)package-defaults/package-defaults.props" />

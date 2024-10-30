@@ -480,8 +480,8 @@
       "proxydevelopmentserver.demo": {
         "type": "Project",
         "dependencies": {
-          "ProxyDevelopmentServer": "[0.1.0, )",
-          "ProxyDevelopmentServer.Demo.React": "[1.0.0, )"
+          "ProxyDevelopmentServer": "[0.1.0-local, )",
+          "ProxyDevelopmentServer.Demo.React": "[1.0.0-local, )"
         }
       },
       "proxydevelopmentserver.demo.react": {

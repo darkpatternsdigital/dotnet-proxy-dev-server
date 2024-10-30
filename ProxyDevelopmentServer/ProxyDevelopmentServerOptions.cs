@@ -43,4 +43,18 @@ public record ProxyDevelopmentServerOptions
 	/// If the <see cref="ReadyText"/> is not found by the timeout, the application will be aborted.
 	/// </summary>
 	public TimeSpan Timeout { get; init; } = TimeSpan.FromSeconds(5); // This is a development-time only feature, so a very long timeout is fine
+
+	public delegate (string command, string completeArguments) ToWindowsCommandCallback(ProxyDevelopmentServerOptions options, string fullWorkingDirectory);
+	public ToWindowsCommandCallback ToWindowsCommand { get; init; } = DefaultToWindowsCommand;
+
+	public static (string command, string completeArguments) DefaultToWindowsCommand(ProxyDevelopmentServerOptions options, string fullWorkingDirectory)
+	{
+		var fullPathToCommand = Path.GetFullPath(options.BaseCommand, fullWorkingDirectory);
+
+		// On Windows, the node executable is a .cmd file, so it can't be executed
+		// directly (except with UseShellExecute=true, but that's no good, because
+		// it prevents capturing stdio). So we need to invoke it via "cmd /c".
+		// Cmd also does not auto-adjust forward-slashes to Window's backslashes.
+		return ("cmd", $"/c \"{fullPathToCommand.Replace('/', '\\')}\" {options.Parameters}");
+	}
 }

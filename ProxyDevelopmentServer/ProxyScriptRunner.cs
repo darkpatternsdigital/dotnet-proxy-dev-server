@@ -89,11 +89,7 @@ internal sealed class ProxyScriptRunner : IDisposable
 			var fullPathToCommand = Path.GetFullPath(options.BaseCommand, fullWorkingDirectory);
 			if (OperatingSystem.IsWindows())
 			{
-				// On Windows, the node executable is a .cmd file, so it can't be executed
-				// directly (except with UseShellExecute=true, but that's no good, because
-				// it prevents capturing stdio). So we need to invoke it via "cmd /c".
-				// Cmd also does not auto-adjust forward-slashes to Window's backslashes.
-				return ("cmd", $"/c \"{fullPathToCommand.Replace('/', '\\')}\" {options.Parameters}");
+				return options.ToWindowsCommand(options, fullWorkingDirectory);
 			}
 			else
 			{
