@@ -16,9 +16,9 @@
       },
       "Microsoft.AspNetCore.SpaServices.Extensions": {
         "type": "Direct",
-        "requested": "[8.0.0, )",
-        "resolved": "8.0.0",
-        "contentHash": "kWGOh9wI0eT/n98VSVQJnLAaLCCDHkvYjFp6t1LUf+eIaBwHAMFLsjbS6ILqFYu12XxQdSvFMvVVfhW7S4Pu3g==",
+        "requested": "[8.0.10, )",
+        "resolved": "8.0.10",
+        "contentHash": "YK9QpVOW+aDr5cHd8OSi6A/5F8/pNA/Iwgb45JCGeoy0YhyxNlPAZy3h7QXdtvL/8rGK7cMEZfZi7NBoBQ1qgQ==",
         "dependencies": {
           "Microsoft.Extensions.FileProviders.Physical": "8.0.0"
         }
