@@ -21,11 +21,11 @@
 		"@darkpatternsdigital/eslint-config": "*",
 		"@darkpatternsdigital/prettier-config": "*",
 		"@darkpatternsdigital/tsconfigs": "*",
-		"@eslint/compat": "^1.1.1",
-		"@types/node": "^22.5.0",
-		"eslint": "9.13.0",
+		"@eslint/compat": "^1.2.3",
+		"@types/node": "^22.9.3",
+		"eslint": "9.15.0",
 		"prettier": "^3.3.3",
-		"typescript": "^5.5.4"
+		"typescript": "^5.7.2"
 	},
 	"packageManager": "pnpm@9.10.0",
 	"pnpm": {
